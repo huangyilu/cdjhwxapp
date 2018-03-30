@@ -5,14 +5,13 @@ import * as HotelDataService from '../../services/hotel-service';
 import * as AuthService from '../../services/auth-service';
 import { flattenDeep } from '../../utils/npm/lodash-wx';
 
-// var amapFile = require('../../libs/amap-wx.js');
-// var amapKey = '2a397d94c316bfaa79acf7397bcc4dbb';
 var QQMapWX = require('../../libs/qqmap-wx-jssdk.js');
 var qqmapKey = 'JJSBZ-TZ4CO-GW3WF-SLT4O-KR4BO-D5FGW';
 
 const pageOptions = {
   data: {
     bodyHidden: true,
+    emptyHidden: true,
     // 酒店基本信息
     hotelInfo:{},
     // 评分
@@ -36,12 +35,8 @@ const pageOptions = {
   //事件处理函数
   onLoad: function () {
 
-    // 授权登录
-    // AuthService.wxappLogin();
     // 取数据
-    this.getHotelData();
-
-    
+    this.getHotelData();    
 
   },
 
@@ -105,8 +100,7 @@ const pageOptions = {
     qqmapsdk.geocoder({
       address: me.data.hotelInfo.hotelLocation,
       success: function (res) {
-        // console.log("endLat = " + res.result.location.lat);
-        // console.log("endng = " + res.result.location.lng);
+
         wx.openLocation({
           name: me.data.hotelInfo.hotelName,
           address: me.data.hotelInfo.hotelLocation,
@@ -146,27 +140,28 @@ const pageOptions = {
       // console.log("success = " + JSON.stringify(result.hotel));
       // console.log("gethoteldata success...");
 
-      var hotelInfo = hoteldata.formatHotelInfo(result.hotel);
-      // wx.setNavigationBarTitle({
-      //   title: hotelInfo.hotelName,
-      // })
+      if (result.hotel) {
+        var hotelInfo = result.hotel ? hoteldata.formatHotelInfo(result.hotel) : {};
 
-      console.log("gethoteldata success..." + JSON.stringify(hotelInfo));
+        me.setData({
+          bodyHidden: false,
+          hotelInfo: hotelInfo,
+          score: hoteldata.getScoreStart(hotelInfo.hotelScore),
+          ballrooms: result.banquetHallList ? hoteldata.getTheTopN(hoteldata.formatBallrooms(result.banquetHallList), 2) : [],
+          ballroomsNum: result.banquetHallList ? result.banquetHallList.length : [],
+          weddingmenu: result.comboList ? hoteldata.formatWeddingmenu(result.comboList) : [],
+          weddingmenuNum: result.comboList ? result.comboList.length : 0,
+          banquet: result.celebrationList ? hoteldata.formatBanquet(result.celebrationList) : [],
+          talents: result.talentList ? flattenDeep(hoteldata.formatHomeTalent(result.talentList)) : []
+        })
 
-      me.setData({
-        bodyHidden: false,
-        hotelInfo: hotelInfo,
-        score: hoteldata.getScoreStart(hotelInfo.hotelScore),
-        ballrooms: result.banquetHallList ? hoteldata.getTheTopN(hoteldata.formatBallrooms(result.banquetHallList), 2) : [],
-        ballroomsNum: result.banquetHallList ? result.banquetHallList.length : [],
-        weddingmenu: result.comboList ? hoteldata.formatWeddingmenu(result.comboList) : [],
-        weddingmenuNum: result.comboList ? result.comboList.length : 0,
-        banquet: result.celebrationList ? hoteldata.formatBanquet(result.celebrationList) : [],
-        talents: result.talentList ? flattenDeep(hoteldata.formatHomeTalent(result.talentList)) : []
-      })
-
-      // 保存 预付定金比例
-      wx.setStorageSync('prepayPercent', result.hotel.prepayPercent);
+        // 保存 预付定金比例
+        wx.setStorageSync('prepayPercent', result.hotel.prepayPercent);
+      } else {
+        me.setData({
+          emptyHidden: false,
+        })
+      }
 
       // complete
       wx.hideNavigationBarLoading() //完成停止加载

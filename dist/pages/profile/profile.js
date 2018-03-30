@@ -4,7 +4,6 @@ import * as HotelDataService from '../../services/hotel-service';
 Page({
   data: {
     userInfo: {},
-    profileBgimg: ''
   },
   onLoad: function (options) {
   

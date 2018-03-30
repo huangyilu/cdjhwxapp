@@ -102,7 +102,7 @@ Page({
         tatDetl: details,
         comments: comments.length > 3 ? hoteldata.getTheTopN(comments, 3) : comments,
         allComments: comments,
-        talentType: result.talent.occupation,
+        talentType: result.occupation,
         completeTalent: result,
         talentInfo: talentInfo
       })

@@ -471,17 +471,21 @@ export function formatShoppingcarInStoreItem (item) {
   }
 }
 
-// 转换 价钱
+// 计算 价钱
 export function getAllItemPrice(content) {
   var price = content.info.price ? content.info.price : 0;
   if (content.packageStage) {
     price = content.packageStage.packPrice;
-    if (content.packageStage.stage) {
-      price = content.packageStage.packPrice + content.packageStage.stageprice
+    if (price != '价格面议') {
+      if (content.packageStage.stage) {
+        price = content.packageStage.packPrice + content.packageStage.stageprice
+      }
+    } else {
+      price = 0;
     }
   }
   if (content.info.price == '价格面议') {
-    price = 0
+    price = 0;
   }
   return price;
 }
@@ -547,8 +551,6 @@ export function formatuploadPrepay(list, reservedDate, customerName, tel, gender
     } else if (item.title == '婚礼人才') {
       talentids.push(item.content.typeid  + ';' + item.content.startTime + ';' + item.content.endTime);
       dic.talent = talentids.join(",");
-
-      console.log('talentids ... ' + dic.talent);
     } else if (item.title == '菜品') {
       dic.combo = item.content.typeid;
       dic.hallTable = hallTable;
@@ -623,7 +625,7 @@ export function formatAppListItem(item, title, id) {
     floorHeight: item.floorHeight ? '层高：' + item.floorHeight : '',
     price: item.price ? '¥ ' + item.price : '¥ 0',
     nums: item.countTable ? item.countTable : 1,
-    actualPrice: item.actualPrice == 0 ? '¥ 0 (价格面议)' : null,
+    actualPrice: item.actualPrice == 0 ? '¥ ' + item.actualPrice : null,
     packageStage: item.comboName ? item.comboName : null,
     stage: item.stage == '是' ? true : false,
     celeName: item.comboName ? item.name : ''

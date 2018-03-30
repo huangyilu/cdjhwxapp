@@ -1,7 +1,7 @@
 <!--index.wxml-->
 <import src="../../templates/scorestart/scorestart.wxml"/>
 
-<!-- <view class='remind-empty-view' hidden='{{ ballrooms.length <= 0 }}'>网络不好，请重试！</view> -->
+ <view class='remind-empty-view' hidden='{{ emptyHidden }}'>暂无数据，请重试！</view>  
 
 <view class="body" hidden='{{ bodyHidden }}'>
 
@@ -76,7 +76,7 @@
   </view>
 
   <!-- 宴会庆典 -->
-  <!-- <view class='hotel-wedding-menu'>
+  <view class='hotel-wedding-menu'>
     <view class='scroll-h-title'>
       <text>宴会庆典</text>
     </view>
@@ -92,7 +92,7 @@
         </view>
       </view>
     </scroll-view>
-  </view> -->
+    </view>
 
   <!-- 婚礼人才 -->
   <view class='hotel-talent-menu'>

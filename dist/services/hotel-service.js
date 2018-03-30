@@ -240,3 +240,4 @@ export function queryIsReserved(dateString, hallId) {
 export function queryProfileBgImg() {
   return jsonGetRequest('home/mineBg', {})
 }
+

@@ -2,7 +2,7 @@
 
 
 <view class='profile-body'>
- 
+
   <!-- 头部 -->
   <view class="userinfo" style='background-image: url({{ profileBgimg }})'>
     <view class="userinfo-bg_view" catchtap="gotoUserHome">
